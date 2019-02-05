@@ -1,13 +1,33 @@
-version: '3.6'
+version: '3.7'
 
-services: 
-  smart-brain-api: 
-    container_name: backend
-    #image: node:8.15.0
+services:
+  # PostgreSQL
+  postgres:
+    container_name: db
+    build: ./postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_URL: postgres://admin:password@localhost:5432/smart-brain
+      POSTGRES_DB: smart-brain
+      POSTGRES_HOST: postgres
+    ports:
+      - "5432:5432"
+  # Backend
+  smart-brain-api:
+    # env_file:
+    #   - ./.private/api-keys.env "Another way to insert env variables"
+    container_name: smart-brain-api
     build: ./
+    volumes:
+      - ./:/usr/src/smart-brain-api
     command: npm start
     working_dir: /usr/src/smart-brain-api
-    ports: 
+    ports:
       - "4000:4000"
-    volumes: 
-      - ./:/usr/src/smart-brain-api
+    environment:
+      POSTGRES_URI: postgres://admin:password@postgres:5432/smart-brain
+      REDIS_URI: redis://redis:6379
+  
+    
+      

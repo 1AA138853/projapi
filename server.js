@@ -9,23 +9,27 @@ const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
-
-const db = knex({
-  client: 'pg',
-  connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'soithan',
-    database : 'local_db'
+const tries = 5
+let db
+while(tries){
+  try{db = knex({
+    client: 'pg',
+    connection: process.env.POSTGRES_URI
+  });}
+  catch(err){
+    console.log(err)
+    tries-=1;
   }
-});
+}
+
+console.log("db",db)
 
 const app = express();
 
 app.use(morgan('combined'))
 app.use(cors())
 app.use(bodyParser.json());
-console.log("hahhah");
+console.log("hah125");
 app.get('/', (req, res)=> { res.send("its working") })
 app.post('/signin', signin.handleSignin(db, bcrypt))
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
