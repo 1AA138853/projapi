@@ -9,18 +9,11 @@ const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
-const tries = 5
-let db
-while(tries){
-  try{db = knex({
-    client: 'pg',
-    connection: process.env.POSTGRES_URI
-  });}
-  catch(err){
-    console.log(err)
-    tries-=1;
-  }
-}
+
+const db = knex({
+  client: 'pg',
+  connection: process.env.POSTGRES_URI
+});
 
 console.log("db",db)
 
