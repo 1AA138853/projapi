@@ -8,11 +8,12 @@ const app = new Clarifai.App({
 const handleApiCall = (req, res) => {
   app.models
     .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
-    .then(data => {
-      console("clarifai data", data)
-      res.json(data);
+    .then( (data) => {
+      return res.json(data);
     })
-    .catch(err => console.log(err))
+    .catch( (err) => {
+      return res.json(err)
+    })
 }
 
 const handleImage = (req, res, db) => {
